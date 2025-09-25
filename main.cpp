@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <fstream>
+#include <sstream>
 
 using std::cin;
 using std::cout;
@@ -48,14 +50,14 @@ std::ostream& operator<<(std::ostream &os, const ip &i) {
 
 // Overload of << operator for struct event
 // Prints event using same format as log
-std::ostream& operator<<(std::ostream &os, const event &e) {
-    char date_output[20];
-    strftime(date_output, 20, "%d-%m-%Y,%T", &e.ts);
-    os << date_output << "," << e.ip_o << "," << e.port_o << "," 
-		<< e.domain_o << "," << e.ip_d << "," << e.port_d << "," 
-		<< e.domain_d;
-    return os;
-}
+// std::ostream& operator<<(std::ostream &os, const event &e) {
+//     char date_output[20];
+//     strftime(date_output, 20, "%d-%m-%Y,%T", &e.ts);
+//     os << date_output << "," << e.ip_o << "," << e.port_o << "," 
+// 		<< e.domain_o << "," << e.ip_d << "," << e.port_d << "," 
+// 		<< e.domain_d;
+//     return os;
+// }
 
 // Overload of < operator for struct event
 // Will determine sorting order of events
@@ -65,6 +67,31 @@ bool operator<(const event &e1, const event &e2) {
 }
 
 int main() {
+
+    std::ifstream file("equipo6.csv");
+    string line;
+    vector<vector<string>> data;
+
+    
+
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        string value;
+        vector<string> row;
+
+        while (std::getline(ss, value, ',')) {
+            row.push_back(value);
+        }
+        data.push_back(row);
+    }
+
+    file.open ("equipo6.csv");
+    
+    cout << data[0][1] << "\n";
+    
+    file.close();
+
+    
     // *** Usage example of struct e (delete in final version) ***
     event e{}; // Creates a new event
     
@@ -85,10 +112,12 @@ int main() {
     e.domain_o = "john.reto.com";
     e.domain_d = "google.com";
 
-    cout << e << "\n";
+    // cout << e << "\n";
     
     // *** TODO ***
     vector<event> v{};
+
+    
 
     // Read file
         // For each line, create an event with corresponding values

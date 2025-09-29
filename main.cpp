@@ -71,55 +71,74 @@ bool operator<(const event &e1, const event &e2) {
 int main() {
 
     std::ifstream file("equipo6.csv");
-    string line;
-    vector<vector<string>> data;
+    std::string line;
+    std::vector<event> events;
+
+    // Skip header if present
+    std::getline(file, line); 
 
     while (std::getline(file, line)) {
         std::stringstream ss(line);
-        string value;
-        vector<string> row;
+        std::string time_stamp_date, time_stamp_time, origin_ip, origin_port,origin_domain, ip_detino,puerto_destino,dominio_destino;
+        event e;
 
-        while (std::getline(ss, value, ',')) {
-            row.push_back(value);
-        }
-        data.push_back(row);
-    }
+        std::getline(ss, time_stamp_date, ',');
 
-    file.open ("equipo6.csv");
-    
+        e.port_o = time_stamp_date;
+        // std::stringstream ss2(time_stamp_date);
+        // string day,mon,year;
+        // std::getline(ss2, day, '-');
+        // std::getline(ss2, mon, '-');
+        // std::getline(ss2, year, '-');
+        // e.ts.tm_year = stoi(year) - 1900;
+        // e.ts.tm_mon = stoi(mon); // months since january
+        // e.ts.tm_mday = stoi(day); // day of the month
 
-    int n = data.size();
-    for(int i =0; i<3;i++){
-        cout<<data[i][1] << "\n";
-    }
+
+
+        // std::getline(ss, time_stamp_time, ',');
+        // std::getline(ss, origin_ip, ',');
+
+        
+
+
+        // e.name = name_str;
+        // e.age = std::stoi(age_str); // Convert string to int
+        // e.occupation = occupation_str;
+
+        events.push_back(e);
+    }    
+
+    cout << events[1];
+
     
     file.close();
 
     
-    // *** Usage example of struct e (delete in final version) ***
-    event e{}; // Creates a new event
+    // // *** Usage example of struct e (delete in final version) ***
+    // event e{}; // Creates a new event
     
-    // Sets date of event
-    // Example date: 09/09/2024, 1:15:10 pm
-    e.ts.tm_year = 2024 - 1900; // years since 1900
-    e.ts.tm_mon = 8; // months since january
-    e.ts.tm_mday = 9; // day of the month
-    e.ts.tm_hour = 13; // hours since midnight
-    e.ts.tm_min = 15; // minutes after the hour
-    e.ts.tm_sec = 10; // seconds after the minute
+    // // Sets date of event
+    // // Example date: 09/09/2024, 1:15:10 pm
+    // e.ts.tm_year = 2024 - 1900; // years since 1900
+    // e.ts.tm_mon = 8; // months since january
+    // e.ts.tm_mday = 9; // day of the month
+    // e.ts.tm_hour = 13; // hours since midnight
+    // e.ts.tm_min = 15; // minutes after the hour
+    // e.ts.tm_sec = 10; // seconds after the minute
 
-    // Sets rest of attributes
-    e.ip_o = {10,48,124,211}; // Sets ip_o as new ip
-    e.ip_d = {0,1,1,1}; // Will print as '-'
-    e.port_o = "-";
-    e.port_d = "100";
-    e.domain_o = "john.reto.com";
-    e.domain_d = "google.com";
+    // // Sets rest of attributes
+    // e.ip_o = {10,48,124,211}; // Sets ip_o as new ip
+    // e.ip_d = {0,1,1,1}; // Will print as '-'
+    // e.port_o = "-";
+    // e.port_d = "100";
+    // e.domain_o = "john.reto.com";
+    // e.domain_d = "google.com";
 
-    // cout << e << "\n";
+    // // cout << e << "\n";
     
-    // *** TODO ***
-    vector<event> v{};
+    // // *** TODO ***
+    // vector<event> v{};
 
     
 

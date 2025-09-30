@@ -65,7 +65,12 @@ std::ostream& operator<<(std::ostream &os, const event &e) {
 // Will determine sorting order of events
 // e1 < e2 iff e1.ts < e2.ts
 bool operator<(const event &e1, const event &e2) {
-    return false;
+
+    std::tm ts1 = e1.ts;
+    std::tm ts2 = e2.ts;
+
+    // convierte la estructura tm a un valor de tipo time_t
+    return std::mktime(&ts1) < std::mktime(&ts2);
 }
 
 ip handle_ip(string& ip_str){
@@ -150,19 +155,19 @@ int main() {
         events.push_back(e);
     }
     file.close();
-    if(!events.empty()) {cout<<events[0];}
-    // if(!events.empty()){
-        
 
-        // <<"Fecha: "<<events[0].ts.tm_mday<<"-"<<events[0].ts.tm_mon<<"-"<<events[0].ts.tm_mday<<"\n"
-        // <<"Time: "<<events[0].ts.tm_hour<<":"<<events[0].ts.tm_min<<":"<<events[0].ts.tm_sec<<"\n"
-        // <<"Direccion ip de origen: "<<events[0].ip_o<<"\n"
-        // <<"Puerto de origen: "<<events[0].port_o<<"\n"
-        // <<"Dominio de origen: "<<events[0].domain_o<<"\n"
-        // <<"Direcction ip de destino: "<<events[0].ip_d<<"\n"
-        // <<"Puerto de destino: "<<events[0].port_d<<"\n"
-        // <<"Dominio de destino: "<<events[0].domain_d<<"\n";
-    
+    if (!events.empty()){
+
+    sort(events.begin(), events.end());
+
+    for(int i = 0; i < 5 && i < events.size(); ++i) {
+        char date_output[20];
+        strftime(date_output, 20, "%d-%m-%Y %T", &events[i].ts);
+        cout << date_output << "," << events[i] << "\n";
+    }
+    }
+
+
 
     
     

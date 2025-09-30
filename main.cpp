@@ -132,14 +132,28 @@ int main() {
         //ip de destino
         std::getline(ss,ip_detino,','); e.ip_d = handle_ip(ip_detino);
         
-        //dominio de destino
+        //puerto destino
+
+        std::getline(ss,puerto_destino,','); e.port_d = puerto_destino;
         std::getline(ss,dominio_destino,','); e.domain_d = dominio_destino;
         events.push_back(e);
+    }
+    file.close();
+    if(!events.empty()){
+        cout<<"------------- Ejemplo -------------" <<"\n"
+        <<"Fecha: "<<events[0].ts.tm_mday<<"-"<<events[0].ts.tm_mon<<"-"<<events[0].ts.tm_mday<<"\n"
+        <<"Time: "<<events[0].ts.tm_hour<<":"<<events[0].ts.tm_min<<":"<<events[0].ts.tm_sec<<"\n"
+        <<"Direccion ip de origen: "<<events[0].ip_o<<"\n"
+        <<"Puerto de origen: "<<events[0].port_o<<"\n"
+        <<"Dominio de origen: "<<events[0].domain_o<<"\n"
+        <<"Direcction ip de destino: "<<events[0].ip_d<<"\n"
+        <<"Puerto de destino: "<<events[0].port_d<<"\n"
+        <<"Dominio de destino: "<<events[0].domain_d<<"\n";
     }
 
     
     
-    file.close();
+    
     return 0;
     }    
 

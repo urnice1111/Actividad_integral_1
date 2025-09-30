@@ -53,10 +53,10 @@ std::ostream& operator<<(std::ostream &os, const ip &i) {
 std::ostream& operator<<(std::ostream &os, const event &e) {
     char date_output[20];
     strftime(date_output, 20, "%d-%m-%Y,%T", &e.ts);
-    os << date_output << "," << e.ip_o << "," << e.port_o << "," 
-		<< e.domain_o << "," << e.ip_d << "," << e.port_d << "," 
-		<< e.domain_d;
+    os << e.ip_o << "," << e.port_o << "," 
+		<< e.domain_o << "," << e.ip_d << "," << e.port_d << "," << e.domain_d;
     return os;
+
 }
 
 
@@ -89,9 +89,20 @@ int main() {
     std::ifstream file("equipo6.csv");
     std::string line;
     std::vector<event> events;
+    
 
 
     while (std::getline(file, line)) {
+
+        //esto se usa porque tenco mac os y cauando lee el csv al final tiene un \r, lo tenemos que quitar
+        if (!line.empty() && line.back() == '\r') {
+        line.pop_back();
+        }
+    
+        if(line.empty()) {
+        continue;
+        }
+
         std::stringstream ss(line);
         std::string date_str, time_stamp_time, origin_ip, 
         origin_port,origin_domain, ip_detino,puerto_destino,dominio_destino;
@@ -139,17 +150,19 @@ int main() {
         events.push_back(e);
     }
     file.close();
-    if(!events.empty()){
-        cout<<"------------- Ejemplo -------------" <<"\n"
-        <<"Fecha: "<<events[0].ts.tm_mday<<"-"<<events[0].ts.tm_mon<<"-"<<events[0].ts.tm_mday<<"\n"
-        <<"Time: "<<events[0].ts.tm_hour<<":"<<events[0].ts.tm_min<<":"<<events[0].ts.tm_sec<<"\n"
-        <<"Direccion ip de origen: "<<events[0].ip_o<<"\n"
-        <<"Puerto de origen: "<<events[0].port_o<<"\n"
-        <<"Dominio de origen: "<<events[0].domain_o<<"\n"
-        <<"Direcction ip de destino: "<<events[0].ip_d<<"\n"
-        <<"Puerto de destino: "<<events[0].port_d<<"\n"
-        <<"Dominio de destino: "<<events[0].domain_d<<"\n";
-    }
+    if(!events.empty()) {cout<<events[0];}
+    // if(!events.empty()){
+        
+
+        // <<"Fecha: "<<events[0].ts.tm_mday<<"-"<<events[0].ts.tm_mon<<"-"<<events[0].ts.tm_mday<<"\n"
+        // <<"Time: "<<events[0].ts.tm_hour<<":"<<events[0].ts.tm_min<<":"<<events[0].ts.tm_sec<<"\n"
+        // <<"Direccion ip de origen: "<<events[0].ip_o<<"\n"
+        // <<"Puerto de origen: "<<events[0].port_o<<"\n"
+        // <<"Dominio de origen: "<<events[0].domain_o<<"\n"
+        // <<"Direcction ip de destino: "<<events[0].ip_d<<"\n"
+        // <<"Puerto de destino: "<<events[0].port_d<<"\n"
+        // <<"Dominio de destino: "<<events[0].domain_d<<"\n";
+    
 
     
     
@@ -157,52 +170,3 @@ int main() {
     return 0;
     }    
 
-
-
-    
-    
-
-
-
-
-
-
-
-
-
-
-    
-    // // *** Usage example of struct e (delete in final version) ***
-    // event e{}; // Creates a new event
-    
-
-
-
-    // // Sets date of event
-    // // Example date: 09/09/2024, 1:15:10 pm
-    
-
-    // // Sets rest of attributes
-    // e.ip_o = {10,48,124,211}; // Sets ip_o as new ip
-    // e.ip_d = {0,1,1,1}; // Will print as '-'
-    // e.port_o = "-";
-    // e.port_d = "100";
-    // e.domain_o = "john.reto.com";
-    // e.domain_d = "google.com";
-
-    // // cout << e << "\n";
-    
-    // // *** TODO ***
-    // vector<event> v{};
-
-    
-
-    // Read file
-        // For each line, create an event with corresponding values
-        // Store event in vector
-    // Sort vector (use https://cplusplus.com/reference/algorithm/sort/)
-    // Write out ordered events to new file
-    // Prompt user for date
-        // Define lambda or functor to compare event with provided dates (event's date should be >= than date
-        // Print to console all events starting from date (inclusive)
-		// using https://cplusplus.com/reference/algorithm/find_if/)

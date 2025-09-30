@@ -71,6 +71,7 @@ bool operator<(const event &e1, const event &e2) {
 ip handle_ip(string& ip_str){
     ip res{};
 
+    //Si el resultado leido con getline() es igual a "-" entonces la ip =  0.0.0.0
     if(ip_str=="-") return {0,0,0,0};
     std::stringstream ss(ip_str);
     string part;
@@ -92,8 +93,10 @@ int main() {
 
     while (std::getline(file, line)) {
         std::stringstream ss(line);
-        std::string date_str, time_stamp_time, origin_ip, origin_port,origin_domain, ip_detino,puerto_destino,dominio_destino;
+        std::string date_str, time_stamp_time, origin_ip, 
+        origin_port,origin_domain, ip_detino,puerto_destino,dominio_destino;
         event e;
+
 
        //fecha
         std::getline(ss, date_str, ',');
@@ -118,14 +121,23 @@ int main() {
         e.ts.tm_sec = stoi(s);
 
         //ip_adress_origen
-        std::getline(ss,origin_ip,',');
-        e.ip_o = handle_ip(origin_ip);
-        
+        std::getline(ss,origin_ip,',');e.ip_o = handle_ip(origin_ip); //se usa la funcion handle_ip() para leer la linea y 
+                                                                    //regrear un {} con los numeros serpardos por comas
+        //puerto origen
+        std::getline(ss,origin_port,',');e.port_o = origin_port;
 
+        //dominio origen
+        std::getline(ss,origin_domain,',');e.domain_o = origin_domain;
+
+        //ip de destino
+        std::getline(ss,ip_detino,','); e.ip_d = handle_ip(ip_detino);
+        
+        //dominio de destino
+        std::getline(ss,dominio_destino,','); e.domain_d = dominio_destino;
         events.push_back(e);
     }
 
-    cout<<events[0].ts.tm_hour<<"-"<<events[0].ts.tm_min<<"-"<<events[0].ts.tm_sec<<"ip of origin adress: "<<events[28].ip_o;
+    
     
     file.close();
     return 0;

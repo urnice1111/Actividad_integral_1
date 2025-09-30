@@ -154,23 +154,25 @@ int main() {
         std::getline(ss,dominio_destino,','); e.domain_d = dominio_destino;
         events.push_back(e);
     }
+
     file.close();
 
     if (!events.empty()){
 
+    //ordena con sort
     sort(events.begin(), events.end());
 
-    for(int i = 0; i < 5 && i < events.size(); ++i) {
-        char date_output[20];
-        strftime(date_output, 20, "%d-%m-%Y %T", &events[i].ts);
-        cout << date_output << "," << events[i] << "\n";
-    }
-    }
-
-
-
-    
-    
+    //escribe los elemntos de events en el csv separados con comas
+    std::ofstream myfile("ordenado.csv");
+    int n = events.size();
+    char date_output[20];
+    for(int i = 0; i < n-1; ++i) {
+        strftime(date_output, 20, "%d-%m-%Y,%T", &events[i].ts);
+        myfile<<date_output;
+        myfile<<',';
+        myfile << events[i];
+        myfile << "\r";
+    }}    
     
     return 0;
     }    

@@ -68,64 +68,93 @@ bool operator<(const event &e1, const event &e2) {
     return false;
 }
 
+ip handle_ip(string& ip_str){
+    ip res{};
+
+    if(ip_str=="-") return {0,0,0,0};
+    std::stringstream ss(ip_str);
+    string part;
+    
+    std::getline(ss, part, '.'); res.o1 = stoi(part);
+    std::getline(ss, part, '.'); res.o2 = stoi(part);
+    std::getline(ss, part, '.'); res.o3 = stoi(part);
+    std::getline(ss, part, '.'); res.o4 = stoi(part);
+
+    return res;
+}
+
 int main() {
 
     std::ifstream file("equipo6.csv");
     std::string line;
     std::vector<event> events;
 
-    // Skip header if present
-    std::getline(file, line); 
 
     while (std::getline(file, line)) {
         std::stringstream ss(line);
-        std::string time_stamp_date, time_stamp_time, origin_ip, origin_port,origin_domain, ip_detino,puerto_destino,dominio_destino;
+        std::string date_str, time_stamp_time, origin_ip, origin_port,origin_domain, ip_detino,puerto_destino,dominio_destino;
         event e;
 
-        std::getline(ss, time_stamp_date, ',');
+       //fecha
+        std::getline(ss, date_str, ',');
+        std::stringstream date_ss(date_str);
+        std::string dd, mm, yyyy;
+        std::getline(date_ss, dd, '-');
+        std::getline(date_ss, mm, '-');
+        std::getline(date_ss, yyyy, '-');
+        e.ts.tm_mday = std::stoi(dd);
+        e.ts.tm_mon  = std::stoi(mm) - 1;    
+        e.ts.tm_year = std::stoi(yyyy) - 1900;
 
-        e.port_o = time_stamp_date;
-        // std::stringstream ss2(time_stamp_date);
-        // string day,mon,year;
-        // std::getline(ss2, day, '-');
-        // std::getline(ss2, mon, '-');
-        // std::getline(ss2, year, '-');
-        // e.ts.tm_year = stoi(year) - 1900;
-        // e.ts.tm_mon = stoi(mon); // months since january
-        // e.ts.tm_mday = stoi(day); // day of the month
+        //hora
+        std::getline(ss, time_stamp_time, ',');
+        std::stringstream date_ss_time(time_stamp_time);
+        std::string h,m,s;
+        std::getline(date_ss_time,h,':');
+        std::getline(date_ss_time,m,':');
+        std::getline(date_ss_time,s,':');
+        e.ts.tm_hour = stoi(h);
+        e.ts.tm_min = stoi(m);
+        e.ts.tm_sec = stoi(s);
 
-
-
-        // std::getline(ss, time_stamp_time, ',');
-        // std::getline(ss, origin_ip, ',');
-
+        //ip_adress_origen
+        std::getline(ss,origin_ip,',');
+        e.ip_o = handle_ip(origin_ip);
         
 
-
-        // e.name = name_str;
-        // e.age = std::stoi(age_str); // Convert string to int
-        // e.occupation = occupation_str;
-
         events.push_back(e);
-    }    
+    }
 
-    cout << events[1];
-
+    cout<<events[0].ts.tm_hour<<"-"<<events[0].ts.tm_min<<"-"<<events[0].ts.tm_sec<<"ip of origin adress: "<<events[28].ip_o;
     
     file.close();
+    return 0;
+    }    
+
+
+
+    
+    
+
+
+
+
+
+
+
+
+
 
     
     // // *** Usage example of struct e (delete in final version) ***
     // event e{}; // Creates a new event
     
+
+
+
     // // Sets date of event
     // // Example date: 09/09/2024, 1:15:10 pm
-    // e.ts.tm_year = 2024 - 1900; // years since 1900
-    // e.ts.tm_mon = 8; // months since january
-    // e.ts.tm_mday = 9; // day of the month
-    // e.ts.tm_hour = 13; // hours since midnight
-    // e.ts.tm_min = 15; // minutes after the hour
-    // e.ts.tm_sec = 10; // seconds after the minute
+    
 
     // // Sets rest of attributes
     // e.ip_o = {10,48,124,211}; // Sets ip_o as new ip
@@ -151,6 +180,3 @@ int main() {
         // Define lambda or functor to compare event with provided dates (event's date should be >= than date
         // Print to console all events starting from date (inclusive)
 		// using https://cplusplus.com/reference/algorithm/find_if/)
-
-    return 0;
-}

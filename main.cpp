@@ -19,14 +19,6 @@ struct ip {
     int o4;
 };
 
-// Struct representing a log event (connection between two nodes)
-// ts: Date-time of the event as ctime's tm (check docs: https://cplusplus.com/reference/ctime/tm/)
-// ip_o: IP of the origin node
-// port_o: Port of the origin node
-// domain_o: Domain of the origin node
-// ip_d: IP of the destination node
-// port_d: Port of the destination node
-// domain_d: Domain of the destination node
 struct event {
   struct std::tm ts;
   struct ip ip_o;

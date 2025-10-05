@@ -10,6 +10,8 @@ using std::cin;
 using std::cout;
 using std::string;
 using std::vector;
+using std::endl;
+using std::cin;
 
 // Struct representing an IP address
 struct ip {
@@ -158,14 +160,57 @@ int main() {
     std::ofstream myfile("ordenado.csv");
     int n = events.size();
     char date_output[20];
-    for(int i = 0; i < n-1; ++i) {
+    for(int i = 0; i < n; ++i) {
         strftime(date_output, 20, "%d-%m-%Y,%T", &events[i].ts);
         myfile<<date_output;
         myfile<<',';
         myfile << events[i];
         myfile << "\r";
     }}    
+
+    int day, month, year;
+
+    //El usuario ingresará la fecha de búsqueda
+    cout<<"Busqueda de informacion a partir de fecha"<<endl;
+    cout<<"Ingrese el dia (dd)"<<endl;
+    cin>>day;
+    cout<<"Ingrese el mes (mm)"<<endl;
+    cin>>month;
+    cout<<"Ingrese el año (yyyy)"<<endl;
+    cin>>year;
+
+    struct tm search_date = {0};
+    search_date.tm_mday=day;
+    search_date.tm_mon=month-1;
+    search_date.tm_year=year-1900;
+
+    time_t search_time = mktime(&search_date);
+
+    auto founded = std::find_if(events.begin(),events.end(), 
+    [search_time](const event &e){
+        struct tm event_copy = e.ts;
+
+        time_t event_copy_time=mktime(&event_copy);
+
+        return event_copy_time>=search_time;
+
+    });
+
+    if (founded!=events.end()){
+        cout<<"Eventos encontrados a partir de la fecha ingresada: "<<endl;
+        for(auto it = founded; it != events.end(); ++it){
+            cout<<*it<<endl;
+        }
+    }
+
+
+
+
     
+
     return 0;
+
+
+
     }    
 

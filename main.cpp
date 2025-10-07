@@ -21,7 +21,7 @@ struct ip {
     int o4;
 };
 
-struct event {
+struct Event {
   struct std::tm ts;
   struct ip ip_o;
   string port_o;
@@ -42,23 +42,22 @@ std::ostream& operator<<(std::ostream &os, const ip &i) {
     return os;
 }
 
-// Overload of << operator for struct event
-// Prints event using same format as log
-std::ostream& operator<<(std::ostream &os, const event &e) {
-    char date_output[20];
-    strftime(date_output, 20, "%d-%m-%Y,%T", &e.ts);
+// Overload of << operator for struct Event
+// Prints Event using same format as log
+std::ostream& operator<<(std::ostream &os, const Event &e) {
+    char dateOutput[20];
+    strftime(dateOutput, 20, "%d-%m-%Y,%T", &e.ts);
     os << e.ip_o << "," << e.port_o << "," 
 		<< e.domain_o << "," << e.ip_d << "," << e.port_d << "," << e.domain_d;
     return os;
-
 }
 
 
 
-// Overload of < operator for struct event
-// Will determine sorting order of events
+// Overload of < operator for struct Event
+// Will determine sorting order of Events
 // e1 < e2 iff e1.ts < e2.ts
-bool operator<(const event &e1, const event &e2) {
+bool operator<(const Event &e1, const Event &e2) {
 
     std::tm ts1 = e1.ts;
     std::tm ts2 = e2.ts;
@@ -67,7 +66,7 @@ bool operator<(const event &e1, const event &e2) {
     return std::mktime(&ts1) < std::mktime(&ts2);
 }
 
-ip handle_ip(string& ip_str){
+ip handleIp(string& ip_str){
     ip res{};
 
     //Si el resultado leido con getline() es igual a "-" entonces la ip =  0.0.0.0
@@ -87,7 +86,7 @@ int main() {
 
     std::ifstream file("equipo6.csv");
     std::string line;
-    std::vector<event> events;
+    std::vector<Event> Events;
     
 
 
@@ -103,14 +102,13 @@ int main() {
         }
 
         std::stringstream ss(line);
-        std::string date_str, time_stamp_time, origin_ip, 
-        origin_port,origin_domain, ip_detino,puerto_destino,dominio_destino;
-        event e;
+        std::string dateStr, timeStampTime, originIp, originPort,originDomain,ipDestino,puertoDestino,dominioDestino;
+        Event e;
 
 
        //fecha
-        std::getline(ss, date_str, ',');
-        std::stringstream date_ss(date_str);
+        std::getline(ss, dateStr, ',');
+        std::stringstream date_ss(dateStr);
         std::string dd, mm, yyyy;
         std::getline(date_ss, dd, '-');
         std::getline(date_ss, mm, '-');
@@ -120,8 +118,8 @@ int main() {
         e.ts.tm_year = std::stoi(yyyy) - 1900;
 
         //hora
-        std::getline(ss, time_stamp_time, ',');
-        std::stringstream date_ss_time(time_stamp_time);
+        std::getline(ss, timeStampTime, ',');
+        std::stringstream date_ss_time(timeStampTime);
         std::string h,m,s;
         std::getline(date_ss_time,h,':');
         std::getline(date_ss_time,m,':');
@@ -131,40 +129,40 @@ int main() {
         e.ts.tm_sec = stoi(s);
 
         //ip_adress_origen
-        std::getline(ss,origin_ip,',');e.ip_o = handle_ip(origin_ip); //se usa la funcion handle_ip() para leer la linea y 
+        std::getline(ss,originIp,',');e.ip_o = handleIp(originIp); //se usa la funcion handleIp() para leer la linea y 
                                                                     //regrear un {} con los numeros serpardos por comas
         //puerto origen
-        std::getline(ss,origin_port,',');e.port_o = origin_port;
+        std::getline(ss,originPort,',');e.port_o = originPort;
 
         //dominio origen
-        std::getline(ss,origin_domain,',');e.domain_o = origin_domain;
+        std::getline(ss,originDomain,',');e.domain_o = originDomain;
 
         //ip de destino
-        std::getline(ss,ip_detino,','); e.ip_d = handle_ip(ip_detino);
+        std::getline(ss,ipDestino,','); e.ip_d = handleIp(ipDestino);
         
         //puerto destino
 
-        std::getline(ss,puerto_destino,','); e.port_d = puerto_destino;
-        std::getline(ss,dominio_destino,','); e.domain_d = dominio_destino;
-        events.push_back(e);
+        std::getline(ss,puertoDestino,','); e.port_d = puertoDestino;
+        std::getline(ss,dominioDestino,','); e.domain_d = dominioDestino;
+        Events.push_back(e);
     }
 
     file.close();
 
-    if (!events.empty()){
+    if (!Events.empty()){
 
     //ordena con sort
-    sort(events.begin(), events.end());
+    sort(Events.begin(), Events.end());
 
-    //escribe los elemntos de events en el csv separados con comas
+    //escribe los elemntos de Events en el csv separados con comas
     std::ofstream myfile("ordenado.csv");
-    int n = events.size();
-    char date_output[20];
+    int n = Events.size();
+    char dateOutput[20];
     for(int i = 0; i < n; ++i) {
-        strftime(date_output, 20, "%d-%m-%Y,%T", &events[i].ts);
-        myfile<<date_output;
+        strftime(dateOutput, 20, "%d-%m-%Y,%T", &Events[i].ts);
+        myfile<<dateOutput;
         myfile<<',';
-        myfile << events[i];
+        myfile << Events[i];
         myfile << "\r";
     }}    
 
@@ -186,31 +184,22 @@ int main() {
 
     time_t search_time = mktime(&search_date);
 
-    auto founded = std::find_if(events.begin(),events.end(), 
-    [search_time](const event &e){
-        struct tm event_copy = e.ts;
+    auto founded = std::find_if(Events.begin(),Events.end(), 
+    [search_time](const Event &e){
+        struct tm Event_copy = e.ts;
 
-        time_t event_copy_time=mktime(&event_copy);
+        time_t Event_copy_time=mktime(&Event_copy);
 
-        return event_copy_time>=search_time;
+        return Event_copy_time>=search_time;
 
     });
 
-    if (founded!=events.end()){
+    if (founded!=Events.end()){
         cout<<"Eventos encontrados a partir de la fecha ingresada: "<<endl;
-        for(auto it = founded; it != events.end(); ++it){
+        for(auto it = founded; it != Events.end(); ++it){
             cout<<*it<<endl;
         }
     }
-
-
-
-
-    
-
     return 0;
-
-
-
-    }    
+}    
 

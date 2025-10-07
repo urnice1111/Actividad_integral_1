@@ -1,3 +1,16 @@
+/*
+
+Descripción: Este programa lee un archivo CSV con registros de eventos de red, los ordena cronológicamente y permite buscar eventos a partir de una fecha específica.
+Equipo 6
+Integrantes:
+-Emiliano Garcia Ramos A01753803
+-Jorge Emiliano Loza Ayala A01754686
+-Fernando Tovar Mejia A01666534
+
+06/10/2025
+
+*/
+
 #include <iostream>
 #include <ctime>
 #include <string>
@@ -179,23 +192,23 @@ int main() {
     cout<<"Ingrese el año (yyyy)"<<endl;
     cin>>year;
 
-    struct tm search_date = {0};
-    search_date.tm_mday=day;
-    search_date.tm_mon=month-1;
-    search_date.tm_year=year-1900;
+    struct tm searchDate = {0};
+    searchDate.tm_mday=day;
+    searchDate.tm_mon=month-1;
+    searchDate.tm_year=year-1900;
 
-    time_t search_time = mktime(&search_date);
+    time_t searchTime = mktime(&searchDate);
 
+    //Busca el primer evento que sea mayor o igual a la fecha ingresada por el usuario
+    //La función lambda compara las fechas convirtiendo la estructura tm a time_t
     auto founded = std::find_if(events.begin(),events.end(), 
-    [search_time](const event &e){
-        struct tm event_copy = e.ts;
-
-        time_t event_copy_time=mktime(&event_copy);
-
-        return event_copy_time>=search_time;
-
+    [searchTime](const event &e){
+        struct tm eventCopy = e.ts;
+        time_t eventCopyTime=mktime(&eventCopy);
+        return eventCopyTime>=searchTime;
     });
 
+    //Si se encontró al menos un evento, se imprimen todos los eventos desde ese punto hasta el final
     if (founded!=events.end()){
         cout<<"Eventos encontrados a partir de la fecha ingresada: "<<endl;
         for(auto it = founded; it != events.end(); ++it){
@@ -203,14 +216,7 @@ int main() {
         }
     }
 
-
-
-
-    
-
     return 0;
-
-
 
     }    
 

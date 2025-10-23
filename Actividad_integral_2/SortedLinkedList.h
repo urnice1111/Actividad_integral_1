@@ -4,6 +4,7 @@
 #include "Node.h"
 
 using std::cout;
+using std::endl;
 
 // Forward declaration of iterator calss
 template <typename T>
@@ -49,6 +50,20 @@ public:
     // (determined by < operator)
     void add(T &element)
     {
+        Node<T> *i = head -> next; 
+        Node<T> *prev = head;
+        Node<T> *new_node{new Node<T>{element}};
+
+        while (i != bottom && i -> data < element)
+        {
+            prev = i;
+            i = i -> next;
+        }
+
+
+        new_node -> next = i;
+        prev -> next = new_node;
+        
 
     }  
 

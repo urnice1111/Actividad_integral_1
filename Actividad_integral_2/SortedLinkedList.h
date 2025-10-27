@@ -60,11 +60,13 @@ public:
             i = i -> next;
         }
 
-
         new_node -> next = i;
-        prev -> next = new_node;
-        
+        new_node -> prev = prev;
 
+        i -> prev = new_node;
+        prev -> next = new_node;
+
+        ++list_size;
     }  
 
     // Removes and returns first element
@@ -87,6 +89,13 @@ public:
     template <typename F>
     iterator find(F &fun)
     {
+        for(iterator it = begin(); it != end() ; it++){
+            if(fun(*it)){
+                return it;
+            }
+        }
+
+        return end();
 
     }
     

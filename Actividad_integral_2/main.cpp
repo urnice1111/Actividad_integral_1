@@ -68,7 +68,7 @@ bool operator<(ip &ip1, ip &ip2)
     if(ip1.o1<ip2.o1){
         return true;
     }
-    else if(ip1.o1==ip2.o2){
+    else if(ip1.o1==ip2.o1){
         return ip1.o2 < ip2.o2;
     } else{
         return false;

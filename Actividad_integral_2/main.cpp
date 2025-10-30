@@ -2,10 +2,13 @@
 #include <ctime>
 #include <string>
 #include "SortedLinkedList.h"
+#include <fstream>
+#include <sstream>
 
 using std::cout;
 using std::cin;
 using std::string;
+
 
 // Struct representing an IP address
 struct ip {
@@ -87,6 +90,22 @@ bool operator<(event &e1, event &e2) {
 
 }
 
+ip handleIp(string& ip_str){
+    ip res{};
+
+    //Si el resultado leido con getline() es igual a "-" entonces la ip =  0.0.0.0
+    if(ip_str=="-") return {0,0,0,0};
+    std::stringstream ss(ip_str);
+    string part;
+    
+    std::getline(ss, part, '.'); res.o1 = stoi(part);
+    std::getline(ss, part, '.'); res.o2 = stoi(part);
+    std::getline(ss, part, '.'); res.o3 = stoi(part);
+    std::getline(ss, part, '.'); res.o4 = stoi(part);
+
+    return res;
+}
+
 // TODO
 int main() {
     // Create an empty SortedLinkedList
@@ -105,4 +124,79 @@ int main() {
     // to the first element of the list with the
     // destination ip
     // Print out all events with the same ip
+    std::ifstream file("equipo6.csv");
+    string line;
+    SortedLinkedList<event> sll;
+
+
+    while (std::getline(file, line)) {
+
+        //esto se usa porque tenco mac os y cauando lee el csv al final tiene un \r, lo tenemos que quitar
+        if (!line.empty() && line.back() == '\r') {
+        line.pop_back();
+        }
+    
+        if(line.empty()) {
+        continue;
+        }
+
+        std::stringstream ss(line);
+        std::string dateStr, timeStampTime, originIp, originPort,originDomain,ipDestino,puertoDestino,dominioDestino;
+        event e;
+
+
+       //fecha
+        std::getline(ss, dateStr, ',');
+        std::stringstream date_ss(dateStr);
+        std::string dd, mm, yyyy;
+        std::getline(date_ss, dd, '-');
+        std::getline(date_ss, mm, '-');
+        std::getline(date_ss, yyyy, '-');
+        e.ts.tm_mday = std::stoi(dd);
+        e.ts.tm_mon  = std::stoi(mm) - 1;    
+        e.ts.tm_year = std::stoi(yyyy) - 1900;
+
+        //hora
+        std::getline(ss, timeStampTime, ',');
+        std::stringstream date_ss_time(timeStampTime);
+        std::string h,m,s;
+        std::getline(date_ss_time,h,':');
+        std::getline(date_ss_time,m,':');
+        std::getline(date_ss_time,s,':');
+        e.ts.tm_hour = stoi(h);
+        e.ts.tm_min = stoi(m);
+        e.ts.tm_sec = stoi(s);
+
+        //ip_adress_origen
+        std::getline(ss,originIp,',');e.ip_o = handleIp(originIp); //se usa la funcion handleIp() para leer la linea y 
+                                                                    //regrear un {} con los numeros serpardos por comas
+        //puerto origen
+        std::getline(ss,originPort,',');e.port_o = originPort;
+
+        //dominio origen
+        std::getline(ss,originDomain,',');e.domain_o = originDomain;
+
+        //ip de destino
+        std::getline(ss,ipDestino,','); e.ip_d = handleIp(ipDestino);
+        
+        //puerto destino
+
+        std::getline(ss,puertoDestino,','); e.port_d = puertoDestino;
+        std::getline(ss,dominioDestino,','); e.domain_d = dominioDestino;
+        sll.add(e);
+    }
+
+    
+    file.close();
+    
+    
+    sll.print();
+
+
+
+
+
+   
+
+
 }

@@ -80,7 +80,7 @@ bool operator<(ip &ip1, ip &ip2)
 // e1 < e2 iff e1.ip_d < e2.ip_d
 // SortedLinkedList will use this operator to 
 // determine an event's position in the list
-// when inserting via 'add'
+// when inserting via 'add'-
 bool operator<(event &e1, event &e2) {
     if(e1.ip_d<e2.ip_d){
         return true;

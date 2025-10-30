@@ -62,7 +62,14 @@ std::ostream& operator<<(std::ostream &os, const event &e) {
 // and so on
 bool operator<(ip &ip1, ip &ip2)
 {
-    return false;
+    if(ip1.o1<ip2.o1){
+        return true;
+    }
+    else if(ip1.o1==ip2.o2){
+        return ip1.o2 < ip2.o2;
+    } else{
+        return false;
+    }
 }
 
 // TODO
@@ -72,7 +79,12 @@ bool operator<(ip &ip1, ip &ip2)
 // determine an event's position in the list
 // when inserting via 'add'
 bool operator<(event &e1, event &e2) {
-    return false;
+    if(e1.ip_d<e2.ip_d){
+        return true;
+    } else {
+        return false;
+    }
+
 }
 
 // TODO

@@ -61,18 +61,18 @@ std::ostream& operator<<(std::ostream &os, const event &e) {
 // TODO
 // Overload of < operator for struct ip
 // ip1 < ip2 if ip1.o1 < ip2.o1
-// else if ip1.o1 == ip2.o1, then ip1 < ip2 if ip1.02 < ip2.o2
+// else if ip1.o1 == ip2.o1, then ip1 < ip2 if ip1.o2 < ip2.o2
 // and so on
 bool operator<(ip &ip1, ip &ip2)
 {
-    if(ip1.o1<ip2.o1){
-        return true;
+    if (ip1.o1 != ip2.o1){
+        return ip1.o1<ip2.o1;
+    } else if (ip1.o2 != ip2.o2){
+        return ip1.o2<ip2.o2;
+    } else if (ip1.o3 != ip2.o3){
+        return ip1.o3 < ip2.o3;
     }
-    else if(ip1.o1==ip2.o1){
-        return ip1.o2 < ip2.o2;
-    } else{
-        return false;
-    }
+    return ip1.o4 < ip2.o4;
 }
 
 // TODO
@@ -106,7 +106,6 @@ ip handleIp(string& ip_str){
     return res;
 }
 
-// TODO
 int main() {
     // Create an empty SortedLinkedList
     // Open the log
@@ -180,18 +179,26 @@ int main() {
         std::getline(ss,ipDestino,','); e.ip_d = handleIp(ipDestino);
         
         //puerto destino
-
         std::getline(ss,puertoDestino,','); e.port_d = puertoDestino;
+
+        //dominio destino
         std::getline(ss,dominioDestino,','); e.domain_d = dominioDestino;
         sll.add(e);
     }
 
     
     file.close();
-    
-    
-    sll.print();
 
+    std::ofstream myfile("ordenado2.csv");
+    char dateOutput[20];
+    for (auto& event : sll){
+        strftime(dateOutput, 20, "%d-%m-%Y,%T", &event.ts);
+        myfile<<dateOutput;
+        myfile<<',';
+        myfile << event;
+        myfile << "\r";
+    }
+    
 
 
 

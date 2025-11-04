@@ -82,11 +82,7 @@ bool operator<(ip &ip1, ip &ip2)
 // determine an event's position in the list
 // when inserting via 'add'-
 bool operator<(event &e1, event &e2) {
-    if(e1.ip_d<e2.ip_d){
-        return true;
-    } else {
-        return false;
-    }
+    return e1.ip_d<e2.ip_d;
 
 }
 
@@ -185,9 +181,11 @@ int main() {
         std::getline(ss,dominioDestino,','); e.domain_d = dominioDestino;
         sll.add(e);
     }
-
+    
+    sll.print();
     
     file.close();
+    
 
     std::ofstream myfile("ordenado2.csv");
     char dateOutput[20];
@@ -199,6 +197,31 @@ int main() {
         myfile << "\r";
     }
     
+    int o1,o2,o3,o4;
+    cout<<"--------------------------------------------"<<"\n";
+    cout<<"Busqueda de informacion a partir de ip de dominio"<< "\n" << "Ingrese su en partes:"<<"\n";
+    cout<<"o1: "; cin>>o1;
+    cout<<"o2: "; cin>>o2;
+    cout<<"o3: "; cin>>o3;
+    cout<<"o4: "; cin>>o4;
+
+    ip targetIp{o1, o2, o3, o4};
+
+    auto matchIp = [&targetIp](event &e) {
+        return !(e.ip_d < targetIp) && !(targetIp < e.ip_d);
+    };
+
+    auto it = sll.find(matchIp);
+
+    if (it != sll.end()) {
+        std::cout << "encontrado \n";
+    } else {
+        std::cout << "no encontrado \n";
+    }
+
+    
+
+
 
 
 

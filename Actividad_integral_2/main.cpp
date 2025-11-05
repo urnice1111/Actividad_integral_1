@@ -181,9 +181,7 @@ int main() {
         std::getline(ss,dominioDestino,','); e.domain_d = dominioDestino;
         sll.add(e);
     }
-    
-    sll.print();
-    
+        
     file.close();
     
 
@@ -199,7 +197,7 @@ int main() {
     
     int o1,o2,o3,o4;
     cout<<"--------------------------------------------"<<"\n";
-    cout<<"Busqueda de informacion a partir de ip de dominio"<< "\n" << "Ingrese su en partes:"<<"\n";
+    cout<<"Busqueda de informacion a partir de ip de dominio"<< "\n" << "Ingrese su ip dominio en partes:"<<"\n";
     cout<<"o1: "; cin>>o1;
     cout<<"o2: "; cin>>o2;
     cout<<"o3: "; cin>>o3;
@@ -214,9 +212,17 @@ int main() {
     auto it = sll.find(matchIp);
 
     if (it != sll.end()) {
-        std::cout << "encontrado \n";
-    } else {
-        std::cout << "no encontrado \n";
+    cout<<"--------------------------------------------"<<"\n";
+    cout<<"Buscando eventos desde la ip: "<<o1<<"."<<o2<<"."<<o3<<"."<<o4<<"\n";
+    std::cout << "Eventos desde el encontrado hasta el final:\n";
+    cout<<"--------------------------------------------"<<"\n";
+
+    for (auto i = it; i != sll.end(); ++i) {
+        std::cout << *i << "\n";}
+    } 
+
+    else {
+    std::cout << "No encontrado\n";
     }
 
     

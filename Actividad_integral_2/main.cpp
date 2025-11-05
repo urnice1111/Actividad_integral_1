@@ -184,9 +184,9 @@ int main() {
         
     file.close();
     
-
     std::ofstream myfile("ordenado2.csv");
     char dateOutput[20];
+    
     for (auto& event : sll){
         strftime(dateOutput, 20, "%d-%m-%Y,%T", &event.ts);
         myfile<<dateOutput;

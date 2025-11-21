@@ -4,8 +4,14 @@
 #include <vector>
 #include <algorithm>
 
-using namespace std;
-
+using std::string;
+using std::cout;
+using std::endl;
+using std::vector;
+using std::pair;
+using std::getline;
+using std::stringstream;
+using std::cin;
 
 struct ip {
     int o1;
@@ -14,6 +20,7 @@ struct ip {
     int o4;
 };
 
+//Funcion auxiliar para convertir string a ip
 ip handleIp(string& ip_str){
     ip res{};
 
@@ -30,6 +37,7 @@ ip handleIp(string& ip_str){
     return res;
 }
 
+//Sobrecarga de operador << para imprimir direccion ip
 std::ostream& operator<<(std::ostream &os, const ip &i) {
     if(i.o1 == 0) {
         os << "-";
@@ -55,7 +63,7 @@ int main() {
     std::ifstream archivoHeap("ordenado22.csv");
 
     if (!archivoHeap.is_open()) {
-        cerr << "Error: No se pudo abrir el archivo ordenado2.csv" << endl;
+        cout << "Error: No se pudo abrir el archivo ordenado2.csv" << endl;
         return 1;
     }
 
@@ -64,6 +72,7 @@ int main() {
     string ipActual = "";
     int contador = 0;
 
+    //Lectura de archivo ordenado22.csv para extraer ip destino
     while (std::getline(archivoHeap, linea)) {
         if (!linea.empty() && linea.back() == '\r') {
             linea.pop_back();
@@ -84,25 +93,32 @@ int main() {
         
         getline(ss, ipDestinoReal, ','); 
 
+
+        //Condicion para la primera direccion IP
         if (ipActual == "") {
             ipActual = ipDestinoReal;
             contador = 1;
         }
+
+        //Contador de frecuencia de IP
         else if (ipDestinoReal == ipActual) {
             contador++;
         }
-        else {
 
+        //Si ipDestinoReal != ipActual, almacena ipActual y el contador en el vector listaContada y actualiza los nuevos valores 
+        else {
             listaContada.push_back({handleIp(ipActual), contador});
             ipActual = ipDestinoReal;
             contador = 1;
         }
     }
 
+    //Condicion para la última dirección ip
     if (ipActual != "") {
         listaContada.push_back({handleIp(ipActual), contador});
     }
 
+    //Convierte el vector listaContada en un heap
     std::make_heap(listaContada.begin(),listaContada.end());
 
     int tamañoInicial = 1;
@@ -113,9 +129,11 @@ int main() {
     cin>>tamañoInicial;
     cout<<endl;
 
+    //En caso de que el usuario ingrese un valor mayor a la cantidad de direcciones IP, ajusta el valor
     if(tamañoInicial>listaContada.size())
     tamañoInicial=listaContada.size();
 
+    //Inicializacion de bucle para mostrar las IP
     for (int i=0; i<tamañoInicial;i++){ 
         pop_heap(listaContada.begin(),listaContada.end());
         cout<<"IP: "<<listaContada.back().first<<endl;
@@ -123,8 +141,6 @@ int main() {
         cout<<endl;
         listaContada.pop_back();
     }
-
-
 
     return 0;
 }

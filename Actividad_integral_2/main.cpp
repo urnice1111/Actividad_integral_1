@@ -1,3 +1,9 @@
+/*
+Emiliano Garcia Ramos
+Jorge Emiliano Loza Ayala
+Fernando Tovar Mejia
+*/
+
 #include <iostream>
 #include <ctime>
 #include <string>
@@ -128,7 +134,7 @@ int main() {
 
         //esto se usa porque tenco mac os y cauando lee el csv al final tiene un \r, lo tenemos que quitar
         if (!line.empty() && line.back() == '\r') {
-        line.pop_back();
+            line.pop_back();
         }
     
         if(line.empty()) {
@@ -184,17 +190,18 @@ int main() {
         
     file.close();
     
-    std::ofstream myfile("ordenado2.csv");
+    //Escribe los elemntos de Events en el csv separados con comas
+    std::ofstream myfile("ordenado22.csv");
     char dateOutput[20];
-    
     for (auto& event : sll){
         strftime(dateOutput, 20, "%d-%m-%Y,%T", &event.ts);
         myfile<<dateOutput;
         myfile<<',';
         myfile << event;
-        myfile << "\r";
+        myfile << "\n";
     }
     
+    //Le pide al usuario una IP para buscar y desplegar todos los resultados que coinciden
     int o1,o2,o3,o4;
     cout<<"--------------------------------------------"<<"\n";
     cout<<"Busqueda de informacion a partir de ip de dominio"<< "\n" << "Ingrese su ip dominio en partes:"<<"\n";
@@ -205,22 +212,23 @@ int main() {
 
     ip targetIp{o1, o2, o3, o4};
 
+    //Funcion anonima con nombre matchIp que encapsula targetIp por referencia 
+    //y el evento que lee en el momento de mandarla a llamar en el metodo find de la clase SortedLinkList.
     auto matchIp = [&targetIp](event &e) {
         return !(e.ip_d < targetIp) && !(targetIp < e.ip_d);
     };
-
     auto it = sll.find(matchIp);
 
+    ////Desde el iterador que encontro esa misma IP despliega todos los resultados, solo si la encuentra (it != sll.end())
     if (it != sll.end()) {
-    cout<<"--------------------------------------------"<<"\n";
-    cout<<"Buscando eventos desde la ip: "<<o1<<"."<<o2<<"."<<o3<<"."<<o4<<"\n";
-    std::cout << "Eventos desde el encontrado hasta el final:\n";
-    cout<<"--------------------------------------------"<<"\n";
+        cout<<"--------------------------------------------"<<"\n";
+        cout<<"Buscando eventos desde la ip: "<<o1<<"."<<o2<<"."<<o3<<"."<<o4<<"\n";
+        cout << "Eventos desde el encontrado hasta el final:\n";
+        cout<<"--------------------------------------------"<<"\n";
 
-    for (auto i = it; i != sll.end(); ++i) {
-        std::cout << *i << "\n";}
+        for (auto i = it; i != sll.end(); ++i) {
+            cout << *i << "\n";}
     } 
-
     else {
     std::cout << "No encontrado\n";
     }

@@ -1,3 +1,9 @@
+/*
+Emiliano Garcia Ramos
+Jorge Emiliano Loza Ayala
+Fernando Tovar Mejia
+*/
+
 #ifndef NODE_H
 #define NODE_H
 

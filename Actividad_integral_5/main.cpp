@@ -3,7 +3,9 @@
 #include <fstream>
 #include <sstream>
 #include <unordered_map>
-#include <time.h>
+#include <ctime>
+#include <vector>
+#include <algorithm>
 
 using std::cin;
 using std::cout;
@@ -15,6 +17,7 @@ using std::getline;
 using std::unordered_map;
 using std::ifstream;
 using std::stringstream;
+using std::sort;
 
 
 int main(){
@@ -24,7 +27,7 @@ int main(){
     unordered_map<string, pair<int, time_t>> umap;
 
     while(getline(file,line)){
-        tm ts;
+        tm ts = {0};
         stringstream ss(line);
         string basura;
         string timeStampTime;
@@ -61,11 +64,7 @@ int main(){
 
         time_t actualAccess = mktime(&ts);
 
-        getline(ss,basura,',');
-        getline(ss,basura,',');
-        getline(ss,basura,',');
-        getline(ss,basura,',');
-        getline(ss,basura,',');
+        for(int i=0; i<5; i++) getline(ss,basura,',');
 
         getline(ss,dominioDestino,',');
 
@@ -76,18 +75,31 @@ int main(){
         } else {
             double difference = difftime(actualAccess, umap.at(dominioDestino).second);
 
-            if (difference<=30){
+            if (abs(difference<=30)){
                 umap.at(dominioDestino).first++;
             }
             umap.at(dominioDestino).second=actualAccess;
         }
     }
 
+    vector<pair<string,int>> ordenado;
+
     for(auto it = umap.begin(); it != umap.end(); it++){
-        cout<< "Dominio destino: "<< it ->first<<endl;
-        cout<< "Contador: "<<it ->second.first<<endl;
-        cout<<endl;
+        ordenado.push_back({it->first, it ->second.first});
     }
+
+    sort(ordenado.begin(), ordenado.end(), 
+        [](const pair<string, int> &a, const pair<string, int> &b) {
+            return a.second > b.second; 
+        }
+    );
+
+    for(int i = 0; i < 10; i++){
+        cout << "#" << i+1 << ": " << ordenado[i].first 
+             << " | Cantidad: " << ordenado[i].second << endl;
+    }
+
+
 
     return 0;
 }

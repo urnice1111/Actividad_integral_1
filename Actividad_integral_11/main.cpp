@@ -176,7 +176,7 @@ int main() {
         myfile<<dateOutput;
         myfile<<',';
         myfile << Events[i];
-        myfile << "\r";
+        myfile << "\n";
     }}    
 
     int day, month, year;

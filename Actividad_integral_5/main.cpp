@@ -30,6 +30,11 @@ int main(){
         string timeStampTime;
         string dateStr;
         string dominioDestino;
+
+        if (!line.empty() && line.back() == '\n') {
+            line.pop_back();
+        }
+        if(line.empty()) continue;
         
 
         //fecha
@@ -72,9 +77,9 @@ int main(){
             double difference = difftime(actualAccess, umap.at(dominioDestino).second);
 
             if (difference<=30){
-                umap.at(dominioDestino).second=actualAccess;
                 umap.at(dominioDestino).first++;
             }
+            umap.at(dominioDestino).second=actualAccess;
         }
     }
 
